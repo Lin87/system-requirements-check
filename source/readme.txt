@@ -1,10 +1,11 @@
-=== Plugin Name ===
+=== System Requirements Check ===
 Contributors: eslin87
 Tags: operating, browser, cookie, requirements, JRE, javascript, system, flash, check, checker, os, client, screen, resolution, IP
-Requires at least: 3.0
-Tested up to: 6.1
-Stable tag: 1.2.4
-License: GPLv3
+Requires at least: 5.0
+Requires PHP: 7.0
+Tested up to: 6.7.2
+Stable tag: 1.2.5
+License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Checks for the specified version of the operating systems, web browsers, screen resolution, IP address, Flash Player, JRE, cookie, and Javascript.
@@ -45,6 +46,9 @@ The shortcode is <code>[system_requirements_check]</code>. It is on top of the p
 2. Settings page
 
 == Changelog ==
+
+= 1.2.5 =
+* 
 
 = 1.2.4 =
 * Now display the specified Microsoft Edge version number in the small print for browser check.

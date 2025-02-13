@@ -1,7 +1,7 @@
-# System Requirements Check (v1.2.4)
+# System Requirements Check (v1.2.5)
 
 **Requires WordPress Version: 3.0**  
-**Tested up to WordPress Version: 6.1**
+**Tested up to WordPress Version: 6.7.2**
 
 A system requirements plugin that checks for the specified version of the operating systems, web browsers, screen resolution, IP addresses, Adobe Flash Player, Java Runtime Environment (JRE), Cookie, and Javascript on the client's system. The result can be displayed on a post or page with the use of a shortcode to let the end-users be aware that their system may not be optimal for specific tasks or operations.
 
@@ -22,6 +22,9 @@ A system requirements plugin that checks for the specified version of the operat
 * Activate the plugin from the Plugins menu within the WordPress admin.
 
 ## Changelog
+
+** 1.2.5 **
+* 
 
 ** 1.2.4 **
 * Now display the specified Microsoft Edge version number in the small print for browser check.
