@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: System Requirements Check
- * Plugin URI: https://github.com/uwex-learning-tech/system-requirements-check
+ * Plugin URI: https://github.com/lin87/system-requirements-check
  * Description: A system requirements plugin that checks for the specified version of the operating systems, web browsers, screen resolution, IP addresses, Adobe Flash Player, Java Runtime Environment (JRE), Cookie, and Javascript on the client's system. The result can be displayed on a post or page with the use of a shortcode to let the end-users be aware that their system may not be optimal for specific tasks or operations.
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Ethan Lin
- * Author URI: https://github.com/Lin87
+ * Author URI: https://profiles.wordpress.org/eslin87/
  * License: GPLv3
  */
- /*  Copyright 2014-2023. Ethan Lin and University of Wisconsin Extended Campus
+ /*  Copyright 2014-2025 Ethan Lin
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -29,18 +29,24 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 define( 'SYSTEM_REQ_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ) ) ) );
 
+// include the setting class
+require_once( sprintf( '%s/includes/admin/class-system-requirements-check-settings.php', dirname( __FILE__ ) ) );
+
+// include the shortcode class
+require_once( 'includes/class-system-requirements-check-shortcodes.php' );
+
 /**
  * System Check Class
  */
 class System_Requirements_Check {
+
+	private $settings_page;
 
 	/**
 	 * Constructor - set and hook up the plugin
 	 */
 	public function __construct() {
 
-		// add a setting page
-		include( sprintf( "%s/includes/admin/class-system-requirements-check-settings.php", dirname( __FILE__ ) ) );
 		$this->settings_page = new System_Requirements_Check_Settings();
 
 		// actions
@@ -52,47 +58,33 @@ class System_Requirements_Check {
 	/**
 	 * Activate the plugin
 	 */
-	public static function activate() {
-
-		// Do nothing
-
-	}
+	public static function activate() { }
 
 	/**
 	 * Deactivate the plugin
 	 */
-	public static function deactivate() {
-
-		// Do nothing
-
-	}
+	public static function deactivate() { }
 
 	/**
 	 * add a menu
 	 */
 	public function add_menu() {
-
 		add_options_page( 'System Requirements Check', 'System Requirements Check', 'manage_options', 'system_requirements_check', array( $this->settings_page, 'output' ) );
-
 	}
 
 	/**
 	 * Add Admin CSS files
 	 */
 	public function backend_scripts() {
-
 		wp_enqueue_style( 'system-requirements-check-settings', plugin_dir_url(__FILE__) . 'assets/css/system-requirements-check-settings.css' );
-
 	}
 
 } // end class System_Requirements_Check
 
 // Installation and uninstallation hooks
-register_activation_hook( __FILE__, array('System_Requirements_Check', 'activate' ) );
+register_activation_hook( __FILE__, array( 'System_Requirements_Check', 'activate' ) );
 
 // instantiate the plugin class
-if ( is_admin() )
+if ( is_admin() ) {
 	$system_requirements_check = new System_Requirements_Check();
-
-// add shortcode
-require_once( "includes/class-system-requirements-check-shortcodes.php" );
+}

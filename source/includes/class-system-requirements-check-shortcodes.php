@@ -40,6 +40,8 @@ class System_Requirements_Check_Shortcode {
     public function check_system_requirements() {
         
         $osCallout = '';
+        $ipCallout = '';
+        $screenCallout = '';
         
         if ( get_option('ip') == '1' ) {
             $ipCallout = $this->getIP();

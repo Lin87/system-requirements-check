@@ -1,11 +1,14 @@
 <?php
 
-if (!defined('ABSPATH')) exit; // exit if accessed directly
+if ( !defined('ABSPATH') ) exit; // exit if accessed directly
 
 /**
  * System_Requirements_Check_Setting class
  */
 class System_Requirements_Check_Settings {
+
+	private $settings_group;
+	private $settings;
 	
 	/**
 	 * __construct function
@@ -15,8 +18,8 @@ class System_Requirements_Check_Settings {
 	 */
 	 public function __construct() {
 		 
-		 $this->settings_group = "system_requirements_check";
-		 add_action('admin_init', array($this, 'register_settings'));
+		 $this->settings_group = 'system_requirements_check';
+		 add_action( 'admin_init', array( $this, 'register_settings' ) );
 		 
 	 }
 	 
@@ -28,7 +31,7 @@ class System_Requirements_Check_Settings {
 	 */
 	protected function init_settings() {
 	
-		$this->settings = apply_filters('system_requirements_check_settings',
+		$this->settings = apply_filters( 'system_requirements_check_settings',
 			array(
 				'system_requirements' => array(
 					__( 'System Requirements', 'system_requirements_check' ),
@@ -153,15 +156,16 @@ class System_Requirements_Check_Settings {
 	
 		$this->init_settings();
 
-		foreach ($this->settings as $section) {
+		foreach ( $this->settings as $section ) {
 		
-			foreach ($section[1] as $option) {
-			
-				if (isset($option['std'])) {
-					add_option($option['name'], $option['std']);
+			foreach ( $section[1] as $option ) {
+
+				if ( isset( $option['std'] ) ) {
+					add_option( $option['name'], $option['std'] );
 				}
 					
-				register_setting($this->settings_group, $option['name']);
+				register_setting( $this->settings_group, $option['name'] );
+
 			}
 		}
 		
@@ -174,19 +178,13 @@ class System_Requirements_Check_Settings {
 	 * @return void
 	 */
 	public function output() {
-	
 		$this->init_settings();
-		
 		?>
 		
 		<div class="wrap">
-		
-			<h2>System Requirements Check</h2>
-			
+			<h1>System Requirements Check</h1>
 			<div class="src-wrap">
-			    
-				<?php include_once(sprintf("%s",'system-requirements-check-settings-form.php')); ?>
-				
+				<?php include_once( sprintf( '%s','system-requirements-check-settings-form.php' ) ); ?>
 			</div>
 		</div>
 		<?php

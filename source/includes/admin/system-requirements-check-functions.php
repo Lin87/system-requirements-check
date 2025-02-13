@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('ABSPATH')) exit; // exit if accessed directly
+if ( !defined('ABSPATH') ) exit; // exit if accessed directly
 
 /**
  * prep_option function
@@ -10,13 +10,15 @@ if (!defined('ABSPATH')) exit; // exit if accessed directly
  * @return string
  *
  */
-function prep_option($arg) {
+function prep_option( $arg ) {
 	
-	if (empty($arg))
+	if ( empty( $arg ) ) {
 		return '0';
+	}
 		
-	$arg = trim($arg);
-	$arg = htmlentities($arg, ENT_QUOTES);
+	$arg = trim( $arg );
+	$arg = htmlentities( $arg, ENT_QUOTES );
+
 	return $arg;
 	
 }

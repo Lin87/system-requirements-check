@@ -1,23 +1,19 @@
 <div class="instruction_box">
-    <h3>INSTRUCTION</h3>
-    <p>Place the shortcode (below) on post or page where the result is to be displayed.</p>
-    <p><strong><code>[system_requirements_check]</code></strong></p>
-    
-    <div class="callout info"><strong>Have questions, suggestions, or ideas?</strong> Post them on <a href="https://github.com/uwex-learning-tech/system-requirements-check/issues" target="_blank">System Requirements Check GitHub Repository</a>.</div>
-
+    <h2>Instruction</h2>
+    <p>Place the shortcode <strong><code>[system_requirements_check]</code></strong> on a post or page to display the system requirements check results.</p>
 </div>
-
+<hr />
 <div class="settings_box">
+
+	<h2>Settings</h2>
 
     <form method="post" action="options.php">
         
-        <h3>Settings</h3>
-        
     	<?php
     	
-    	    settings_fields($this->settings_group);
+    	    settings_fields( $this->settings_group );
     	    
-    		if (!empty($_GET['settings-updated'] ) ) {
+    		if ( !empty($_GET['settings-updated'] ) ) {
     			flush_rewrite_rules();
     		}
     		
