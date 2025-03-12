@@ -1,37 +1,41 @@
 <?php
+/**
+ * System Requirements Check Shortcode Class
+ *
+ * @package system-requirements-check
+ */
+declare( strict_types=1 );
 
-if (!defined('ABSPATH')) exit; // exit if accessed directly
+namespace eslin87\SysReq;
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+require_once __DIR__ . 'includes/Extension.php';
+require_once __DIR__ . 'includes/Singleton.php';
+require_once __DIR__ . 'includes/helpers.php';
+require_once __DIR__ . 'includes/class-check-system.php';
 
 /**
- * System_Requirements_Check_Shortcode class
+ * System Requirements Check Shortcode
  */
-class System_Requirements_Check_Shortcode {
+class Shortcode Extends Singleton implements Extension {
+
+    private $check_system;
 
     /**
-     * __construct function
-     *
-     * @access public
-     * @return void
-     *
-     */
-    public function __construct() {
+	 * Add shortcode and enqueue frontend styles and scripts
+	 *
+	 * @return void
+	 */
+    final public function initialize() {
+		$this->$check_system = new CheckSystem();
 
-        // includes
-        include_once('system-requirements-check-functions.php');
-        include_once('class-system-requirements-check-system.php');
-
-        $GLOBALS['system_to_check'] = new System_Requirements_Check_System();
-
-        // add shortcode
-        add_shortcode('system_requirements_check', array($this,'check_system_requirements'));
-
-        // add action
-        add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
-
-    }
+        add_shortcode( 'system_requirements_check', array( $this, 'check_system_requirements' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts') );
+	}
 
     /**
-     * syc handler function
+     * shortcode handler function
      *
      * @access public
      * @return void
@@ -107,7 +111,7 @@ class System_Requirements_Check_Shortcode {
                            '/macintosh|macos|mac os x/i' => prep(get_option('mac')),
                            '/linux/i'                    => prep(get_option('linux'))
                           );
-        $agent = $GLOBALS['system_to_check']->getAgent();
+        $agent = $this->$check_system->getAgent();
 
         $os = '';
         $icon = '';
@@ -282,7 +286,7 @@ class System_Requirements_Check_Shortcode {
                                 );
         $found = false;
         $correctVersion = false;
-        $clientBrowser = $GLOBALS['system_to_check']->getBrowser();
+        $clientBrowser = $this->$check_system->getBrowser();
         $icon = '';
         $browser = '';
         $version = '';
@@ -477,7 +481,7 @@ class System_Requirements_Check_Shortcode {
 
         if ($js == 0) return '';
 
-        return '<script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-js.js"></script><noscript><div class="callout danger"><p><span class="icon-danger big red"></span><span class="icon-javascript big"></span><strong>JavaScript is disabled!</strong> - Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-js.js"></script><noscript><div class="callout danger"><p><span class="icon-danger big red"></span><span class="icon-javascript big"></span><strong>JavaScript is disabled!</strong> - Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -495,7 +499,7 @@ class System_Requirements_Check_Shortcode {
 
         if ($cookies == 0) return '';
 
-        return '<script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-cookies.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-cookies.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -513,7 +517,7 @@ class System_Requirements_Check_Shortcode {
 
         if ($jre <= 0) return '';
 
-        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-java.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-java.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -531,7 +535,7 @@ class System_Requirements_Check_Shortcode {
 
         if ($flash <= 0) return '';
 
-        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-flash.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-flash.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
     
@@ -550,24 +554,26 @@ class System_Requirements_Check_Shortcode {
             $screenWidth = prep(get_option('screen_w'));
             $screenHeight = prep(get_option('screen_h'));
             
-            return '<input id="checkScreenW" type="hidden" value="'.$screenWidth.'" /><input id="checkScreenH" type="hidden" value="'.$screenHeight.'" /><input id="disableCheckScreen" type="hidden" value="0" /><script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+            return '<input id="checkScreenW" type="hidden" value="'.$screenWidth.'" /><input id="checkScreenH" type="hidden" value="'.$screenHeight.'" /><input id="disableCheckScreen" type="hidden" value="0" /><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
             
         }
 
-        return '<input id="disableCheckScreen" type="hidden" value="1" /><script type="text/javascript" src="'.SYSTEM_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="disableCheckScreen" type="hidden" value="1" /><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
-
 
     /**
      * Register and enqueue scripts and css
      */
     public function frontend_scripts() {
-
-        wp_enqueue_style('system-requirements-check-frontend', '' . SYSTEM_REQ_URL . '/assets/css/system-requirements-check-frontend.css');
-
+        wp_register_style(
+            'system-requirements-check',
+            plugins_url( 'public/css/system-requirements-check-frontend.css', dirname( __FILE__ ) ),
+            array(),
+            SYS_REQ_VERSION,
+            true
+        );
+		wp_enqueue_style( 'system-requirements-check' );
     }
 
-} // end class System_Requirements_Check_Shortcode
-
-new System_Requirements_Check_Shortcode();
+}

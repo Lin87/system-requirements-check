@@ -1,11 +1,19 @@
 <?php
+/**
+ * Check System Class
+ *
+ * @package system-requirements-check
+ */
+declare( strict_types=1 );
 
-if (!defined('ABSPATH')) exit; // exit if accessed directly
+namespace eslin87\SysReq;
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 /**
- * System_Requirements_Check_System class
+ * Check System
  */
-class System_Requirements_Check_System {
+class CheckSystem {
 
     private $agent;
     private $os_array;

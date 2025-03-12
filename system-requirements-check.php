@@ -8,83 +8,27 @@
  * Author URI: https://profiles.wordpress.org/eslin87/
  * License: GPLv3
  */
- /*  Copyright 2014-2025 Ethan Lin
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as
-    published by the Free Software Foundation.
+ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+if ( ! function_exists( '\get_plugin_data' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+define( 'SYS_REQ_VERSION', \get_plugin_data( __FILE__, false, false )['Version'] );
+define( 'SYS_REQ_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ) ) ) );
 
-// exit if access directly
-if ( !defined( 'ABSPATH' ) ) exit;
-
-define( 'SYSTEM_REQ_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ) ) ) );
-
-// include the setting class
-require_once( sprintf( '%s/includes/admin/class-system-requirements-check-settings.php', dirname( __FILE__ ) ) );
-
-// include the shortcode class
-require_once( 'includes/class-system-requirements-check-shortcodes.php' );
+require_once __DIR__ . 'includes/class-system-requirements-check.php';
+require_once __DIR__ . 'includes/class-shortcode.php';
 
 /**
- * System Check Class
+ * Initialize the plugin.
+ *
+ * @return void
  */
-class System_Requirements_Check {
-
-	private $settings_page;
-
-	/**
-	 * Constructor - set and hook up the plugin
-	 */
-	public function __construct() {
-
-		$this->settings_page = new System_Requirements_Check_Settings();
-
-		// actions
-		add_action( 'admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'backend_scripts' ) );
-
-	}
-
-	/**
-	 * Activate the plugin
-	 */
-	public static function activate() { }
-
-	/**
-	 * Deactivate the plugin
-	 */
-	public static function deactivate() { }
-
-	/**
-	 * add a menu
-	 */
-	public function add_menu() {
-		add_options_page( 'System Requirements Check', 'System Requirements Check', 'manage_options', 'system_requirements_check', array( $this->settings_page, 'output' ) );
-	}
-
-	/**
-	 * Add Admin CSS files
-	 */
-	public function backend_scripts() {
-		wp_enqueue_style( 'system-requirements-check-settings', plugin_dir_url(__FILE__) . 'assets/css/system-requirements-check-settings.css' );
-	}
-
-} // end class System_Requirements_Check
-
-// Installation and uninstallation hooks
-register_activation_hook( __FILE__, array( 'System_Requirements_Check', 'activate' ) );
-
-// instantiate the plugin class
-if ( is_admin() ) {
-	$system_requirements_check = new System_Requirements_Check();
+function sys_req_init() {
+	\eslin87\SysReq\SystemRequirementsCheck::instance()->activate( __FILE__ )->initialize();
+	\eslin87\SysReq\Shortcode::instance()->activate( __FILE__ )->initialize();
 }
+
+add_action( 'init', 'sys_req_init', 5 );
