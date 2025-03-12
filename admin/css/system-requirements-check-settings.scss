@@ -1,4 +1,4 @@
-@import "variables";
+@use "../../public/css/variables";
 
 // settings page wrapper
 .src-wrap {
@@ -23,7 +23,7 @@
     	box-shadow: 0 3px 0 0 #dbdbdb;
     	box-sizing: border-box;
         
-        h3 {
+        h2 {
         	margin: 0;
         	text-transform: uppercase;
     	}

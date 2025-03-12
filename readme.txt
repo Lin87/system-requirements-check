@@ -1,9 +1,9 @@
 === System Requirements Check ===
 Contributors: eslin87
-Tags: operating, browser, cookie, requirements, JRE, javascript, system, flash, check, checker, os, client, screen, resolution, IP
+Tags: system, requirements, check
 Requires at least: 5.0
 Requires PHP: 7.0
-Tested up to: 6.7.2
+Tested up to: 6.7
 Stable tag: 1.2.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -48,7 +48,7 @@ The shortcode is <code>[system_requirements_check]</code>. It is on top of the p
 == Changelog ==
 
 = 1.2.5 =
-* 
+* pending...
 
 = 1.2.4 =
 * Now display the specified Microsoft Edge version number in the small print for browser check.
