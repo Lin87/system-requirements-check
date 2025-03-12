@@ -2,6 +2,8 @@ module.exports = function( grunt ) {
 
 	'use strict';
 
+	const sass = require( 'sass' );
+
 	// Project configuration
 	grunt.initConfig( {
 
@@ -36,11 +38,27 @@ module.exports = function( grunt ) {
 				}
 			},
 		},
+
+		sass: {
+			options: {
+				sourceMap: false,
+				implementation: sass
+			},
+			dist: {
+				files: {
+					'public/css/system-requirements-check-frontend.css': 'src/scss/system-requirements-check-frontend.scss',
+					'admin/css/system-requirements-check-settings.css': 'src/scss/system-requirements-check-settings.scss'
+				}
+			}
+		},
 		
 	} );
 
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
-    grunt.registerTask( 'default', ['wp_readme_to_markdown'] );
+	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.registerTask( 'default', ['build'] );
+	grunt.registerTask( 'build', [ 'readme', 'sass' ] );
+    grunt.registerTask( 'readme', ['wp_readme_to_markdown'] );
 
 	grunt.util.linefeed = '\n';
 
