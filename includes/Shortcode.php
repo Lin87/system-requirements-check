@@ -81,7 +81,13 @@ class Shortcode Extends Singleton implements Extension {
         $ip = $_SERVER['REMOTE_ADDR'];
         
         if ( prep(get_option('host_ip')) == '1' ) {
-            $host = $_SERVER['SERVER_ADDR'];
+
+            if ( isset( $_SERVER['SERVER_ADDR'] ) ) {
+                $host = $_SERVER['SERVER_ADDR'];
+            } else {
+                $host = $_SERVER['LOCAL_ADDR'] ?? gethostbyname(gethostname());;
+            }
+
             return '<div class="callout success"><p><span class="icon-ip big"></span><strong>IP Addresses</strong></p><p>Your IP: ' .  $ip . '<br>Host\'s IP: ' . $host . '</p></div>';
         }
         
