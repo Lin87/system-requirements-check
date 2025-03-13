@@ -51,8 +51,7 @@ class SystemRequirementsCheck Extends Singleton implements Extension {
             'system-requirements-check-settings',
             plugins_url( 'admin/css/system-requirements-check-settings.css', dirname( __FILE__ ) ),
             array(),
-            SYS_REQ_VERSION,
-            true
+            SYS_REQ_VERSION
         );
 		wp_enqueue_style( 'system-requirements-check-settings' );
 	}
