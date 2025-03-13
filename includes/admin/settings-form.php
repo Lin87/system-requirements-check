@@ -1,3 +1,5 @@
+<?php  if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
+
 <div class="instruction_box">
     <h2>Instruction</h2>
     <p>Place the shortcode <strong><code>[system_requirements_check]</code></strong> on a post or page to display the system requirements check results.</p>

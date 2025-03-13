@@ -11,7 +11,7 @@ namespace eslin87\SysReq;
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-require_once __DIR__ . 'includes/Extension.php';
+// require_once __DIR__ . 'includes/Extension.php';
 
 /**
  * Singleton

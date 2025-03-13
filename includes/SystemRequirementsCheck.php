@@ -11,9 +11,10 @@ namespace eslin87\SysReq;
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-require_once __DIR__ . 'includes/Extension.php';
-require_once __DIR__ . 'includes/Singleton.php';
-require_once __DIR__ . 'includes/admin/class-system-requirements-check-settings.php';
+// require_once __DIR__ . 'includes/Extension.php';
+// require_once __DIR__ . 'includes/Singleton.php';
+// require_once __DIR__ . 'includes/admin/class-system-requirements-check-settings.php';
+use \eslin87\SysReq\Admin\Settings;
 
 /**
  * System Requirements Check
@@ -28,7 +29,7 @@ class SystemRequirementsCheck Extends Singleton implements Extension {
 	 * @return void
 	 */
     final public function initialize() {
-		$this->settings_page = new System_Requirements_Check_Settings();
+		$this->settings_page = new Settings();
 
 		// actions
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );

@@ -1,11 +1,20 @@
 <?php
+/**
+ * Settings Class
+ *
+ * @package system-requirements-check
+ */
 
-if ( !defined('ABSPATH') ) exit; // exit if accessed directly
+ declare( strict_types=1 );
+
+ namespace eslin87\SysReq\Admin;
+ 
+ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 /**
- * System_Requirements_Check_Setting class
+ * Setting class
  */
-class System_Requirements_Check_Settings {
+class Settings {
 
 	private $settings_group;
 	private $settings;
@@ -184,10 +193,10 @@ class System_Requirements_Check_Settings {
 		<div class="wrap">
 			<h1>System Requirements Check</h1>
 			<div class="src-wrap">
-				<?php include_once( sprintf( '%s','system-requirements-check-settings-form.php' ) ); ?>
+				<?php include_once __DIR__ . '/settings-form.php'; ?>
 			</div>
 		</div>
 		<?php
 	}
 	
-} // end class System_Requirements_Check_Settings
+}

@@ -1,7 +1,7 @@
 @font-face {
   font-family: "systemrequirementscheck";
-  src: url("../font/systemrequirementscheck.eot");
-  src: url("../font/systemrequirementscheck.eot?#iefix") format("embedded-opentype"), url("../font/systemrequirementscheck.woff") format("woff"), url("../font/systemrequirementscheck.ttf") format("truetype"), url("../font/systemrequirementscheck.svg#system-requirements-check") format("svg");
+  src: url("../fonts/systemrequirementscheck.eot");
+  src: url("../fonts/systemrequirementscheck.eot?#iefix") format("embedded-opentype"), url("../fonts/systemrequirementscheck.woff") format("woff"), url("../fonts/systemrequirementscheck.ttf") format("truetype"), url("../fonts/systemrequirementscheck.svg#system-requirements-check") format("svg");
   font-weight: normal;
   font-style: normal;
 }

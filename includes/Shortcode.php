@@ -10,10 +10,7 @@ namespace eslin87\SysReq;
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-require_once __DIR__ . 'includes/Extension.php';
-require_once __DIR__ . 'includes/Singleton.php';
-require_once __DIR__ . 'includes/helpers.php';
-require_once __DIR__ . 'includes/class-check-system.php';
+require_once __DIR__ . '/helpers.php';
 
 /**
  * System Requirements Check Shortcode
@@ -28,7 +25,7 @@ class Shortcode Extends Singleton implements Extension {
 	 * @return void
 	 */
     final public function initialize() {
-		$this->$check_system = new CheckSystem();
+		$this->check_system = new CheckSystem();
 
         add_shortcode( 'system_requirements_check', array( $this, 'check_system_requirements' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts') );
@@ -111,7 +108,7 @@ class Shortcode Extends Singleton implements Extension {
                            '/macintosh|macos|mac os x/i' => prep(get_option('mac')),
                            '/linux/i'                    => prep(get_option('linux'))
                           );
-        $agent = $this->$check_system->getAgent();
+        $agent = $this->check_system->getAgent();
 
         $os = '';
         $icon = '';
@@ -286,7 +283,7 @@ class Shortcode Extends Singleton implements Extension {
                                 );
         $found = false;
         $correctVersion = false;
-        $clientBrowser = $this->$check_system->getBrowser();
+        $clientBrowser = $this->check_system->getBrowser();
         $icon = '';
         $browser = '';
         $version = '';
@@ -481,7 +478,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($js == 0) return '';
 
-        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-js.js"></script><noscript><div class="callout danger"><p><span class="icon-danger big red"></span><span class="icon-javascript big"></span><strong>JavaScript is disabled!</strong> - Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-js.js"></script><noscript><div class="callout danger"><p><span class="icon-danger big red"></span><span class="icon-javascript big"></span><strong>JavaScript is disabled!</strong> - Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -499,7 +496,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($cookies == 0) return '';
 
-        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-cookies.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-cookies.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -517,7 +514,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($jre <= 0) return '';
 
-        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-java.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-java.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -535,7 +532,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($flash <= 0) return '';
 
-        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-flash.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-flash.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
     
@@ -554,11 +551,11 @@ class Shortcode Extends Singleton implements Extension {
             $screenWidth = prep(get_option('screen_w'));
             $screenHeight = prep(get_option('screen_h'));
             
-            return '<input id="checkScreenW" type="hidden" value="'.$screenWidth.'" /><input id="checkScreenH" type="hidden" value="'.$screenHeight.'" /><input id="disableCheckScreen" type="hidden" value="0" /><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+            return '<input id="checkScreenW" type="hidden" value="'.$screenWidth.'" /><input id="checkScreenH" type="hidden" value="'.$screenHeight.'" /><input id="disableCheckScreen" type="hidden" value="0" /><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
             
         }
 
-        return '<input id="disableCheckScreen" type="hidden" value="1" /><script type="text/javascript" src="'.SYS_REQ_URL.'/assets/script/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="disableCheckScreen" type="hidden" value="1" /><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -570,8 +567,7 @@ class Shortcode Extends Singleton implements Extension {
             'system-requirements-check',
             plugins_url( 'public/css/system-requirements-check-frontend.css', dirname( __FILE__ ) ),
             array(),
-            SYS_REQ_VERSION,
-            true
+            SYS_REQ_VERSION
         );
 		wp_enqueue_style( 'system-requirements-check' );
     }
