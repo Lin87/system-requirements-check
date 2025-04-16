@@ -86,13 +86,8 @@
             	width: 110px;
         	}
         	
-        	input[type=text] {
-            	width: 50px;
-        	}
-        	
-        	input[type=number] {
-            	width: 60px;
-            	height: 25px;
+        	input[type=number], input[type=text] {
+            	width: 80px;
         	}
         	
     	}
@@ -117,7 +112,7 @@
 	.callout {
 	
     	padding: 3px 6px;
-    	margin: 16px 0;
+    	margin: 6px 0 16px;
     	border-left: solid 4px $callout-border;
     	background-color: $callout-bg;
     	box-sizing: border-box;

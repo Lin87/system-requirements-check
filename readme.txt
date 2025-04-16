@@ -3,7 +3,7 @@ Contributors: eslin87
 Tags: system, requirements, check
 Requires at least: 5.0
 Requires PHP: 7.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html

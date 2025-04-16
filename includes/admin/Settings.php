@@ -114,11 +114,11 @@ class Settings {
 							'std'		=> '1.6.0'
 						),
 						array(
-							'name'		=> 'cookie',
+							'name'		=> 'cookies',
 							'std'		=> '1'
 						),
 						array(
-							'name'		=> 'js',
+							'name'		=> 'enable_js_check',
 							'std'		=> '1'
 						),
 						array(
@@ -134,20 +134,16 @@ class Settings {
 							'std'		=> '0'
 						),
 						array(
-							'name'		=> 'screen',
-							'std'		=> '0'
-						),
-						array(
-							'name'		=> 'disable_screen_check',
+							'name'		=> 'enable_screen_check',
 							'std'		=> '1'
 						),
 						array(
 							'name'		=> 'screen_w',
-							'std'		=> '1024'
+							'std'		=> '1920'
 						),
 						array(
 							'name'		=> 'screen_h',
-							'std'		=> '640'
+							'std'		=> '1080'
 						)
 					),
 				)

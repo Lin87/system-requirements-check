@@ -43,6 +43,8 @@ class Shortcode Extends Singleton implements Extension {
         $osCallout = '';
         $ipCallout = '';
         $screenCallout = '';
+
+        $ipCheckEnabled = false;
         
         if ( get_option('ip') == '1' ) {
             $ipCallout = $this->getIP();
@@ -56,16 +58,27 @@ class Shortcode Extends Singleton implements Extension {
             $browserCallout = $this->checkBrowser();
         }
         
-        if ( get_option('screen') == '1' ) {
-            $screenCallout = $this->checkScreen();
+        if ( get_option('enable_screen_check') == '1' ) {
+            $screenCheck = esc_attr( prep( get_option('screen_w') ) . 'x' . prep( get_option('screen_h') ) );
+        } else {
+            $screenCheck = 0;
         }
+
+        $javascriptCheck = esc_attr( get_option('enable_js_check') ? 1 : 0 );
         
-        $jsCallout = $this->checkJS();
         $cookieCallout = $this->checkCookies();
         $javaCallout = $this->checkJava();
         $flashCallout = $this->checkFlash();
 
-        return '<div class="system_req_check">' . $ipCallout . $osCallout . $browserCallout . $screenCallout . $jsCallout . $cookieCallout . $javaCallout . $flashCallout .'</div>';
+        $ret = '<div id="system_requirements_check" data-screen-check="' . $screenCheck . '" data-js-check="' . $javascriptCheck . '">';
+        $ret .= $ipCallout . $osCallout . $browserCallout;
+        
+        $ret .= '<div class="card screen ' . ( $screenCheck == 0 ? 'hide' : '' ) . '">Checking...</div>';
+        $ret .= '<div class="card javascript ' . ( $javascriptCheck == 0 ? 'hide' : '' ) . '">Checking...</div>';
+        $ret .=  $cookieCallout . $javaCallout . $flashCallout;
+        $ret .= '<div>';
+
+        return $ret;
 
     }
     
@@ -85,13 +98,13 @@ class Shortcode Extends Singleton implements Extension {
             if ( isset( $_SERVER['SERVER_ADDR'] ) ) {
                 $host = $_SERVER['SERVER_ADDR'];
             } else {
-                $host = $_SERVER['LOCAL_ADDR'] ?? gethostbyname(gethostname());;
+                $host = $_SERVER['LOCAL_ADDR'] ?? gethostbyname(gethostname());
             }
 
-            return '<div class="callout success"><p><span class="icon-ip big"></span><strong>IP Addresses</strong></p><p>Your IP: ' .  $ip . '<br>Host\'s IP: ' . $host . '</p></div>';
+            return '<div class="card success"><p><span class="icon-ip big"></span><strong>IP Addresses</strong></p><p>Your IP: ' .  $ip . '<br>Host\'s IP: ' . $host . '</p></div>';
         }
         
-        return '<div class="callout success"><p><span class="icon-ip big"></span><strong>IP Address: ' . $ip . '</strong></p></div>';
+        return '<div class="card success"><p><span class="icon-ip big"></span><strong>IP Address: ' . $ip . '</strong></p></div>';
         
     }
     
@@ -126,35 +139,35 @@ class Shortcode Extends Singleton implements Extension {
 
             switch($key) {
                 case '/windows nt 5.1/i':
-                $icon = '<span class="icon-windows-old big"></span>';
+                $icon = '<span class="icon-windows-old"></span>';
                 $os = 'Windows XP';
                 break;
                 case '/windows nt 6.0/i':
-                $icon = '<span class="icon-windows-old big"></span>';
+                $icon = '<span class="icon-windows-old"></span>';
                 $os = 'Windows Vista';
                 break;
                 case '/windows nt 6.1/i':
-                $icon = '<span class="icon-windows-old big"></span>';
+                $icon = '<span class="icon-windows-old"></span>';
                 $os = 'Windows 7';
                 break;
                 case '/windows nt 6.2/i':
-                $icon = '<span class="icon-windows-new big"></span>';
+                $icon = '<span class="icon-windows-new"></span>';
                 $os = 'Windows 8';
                 break;
                 case '/windows nt 6.3/i':
-                $icon = '<span class="icon-windows-new big"></span>';
+                $icon = '<span class="icon-windows-new"></span>';
                 $os = 'Windows 8.1';
                 break;
                 case '/windows nt 10.0/i':
-                $icon = '<span class="icon-windows-new big"></span>';
+                $icon = '<span class="icon-windows-new"></span>';
                 $os = 'Windows 10 (or later)';
                 break;
                 case '/macintosh|macos|mac os x/i':
-                $icon = '<span class="icon-apple big"></span>';
+                $icon = '<span class="icon-apple"></span>';
                 $os = 'macOS';
                 break;
                 case '/linux/i':
-                $icon = '<span class="icon-linux big"></span>';
+                $icon = '<span class="icon-linux"></span>';
                 $os = 'Linux';
                 break;
             }
@@ -168,11 +181,11 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($found) {
 
-            return '<div class="callout success"><p><span class="icon-checkmark big green"></span><strong>' . $icon . $os . '</strong></p>' . $this->recommendOS(false,$os) . '</div>';
+            return '<div class="card success"><div class="status-icon"><span class="icon-checkmark"></span></div><div class="src-icon">' . $icon . '</div><p class="src-name">'. $os . '</p></div>';
 
         } else {
 
-            return '<div class="callout danger"><p><span class="icon-danger big red"></span><strong>Your operating system does not meet the requirement!</strong></p><p>Recommended operating systems:' . $this->recommendOS(true) . '</p></div>';
+            return '<div class="card danger"><p><span class="icon-danger big red"></span><strong>Your operating system does not meet the requirement!</strong></p><p>Recommended operating systems:' . $this->recommendOS(true) . '</p></div>';
 
         }
 
@@ -377,17 +390,17 @@ class Shortcode Extends Singleton implements Extension {
 
             if ($correctVersion) {
 
-                return '<div class="callout success"><p><span class="icon-checkmark big green"></span><strong>' . $icon . $browser . ' ('.$version.')' . '</strong></p>' . $this->recommendBrowser(false,$browser) . '</div>';
+                return '<div class="card success"><p><span class="icon-checkmark big green"></span><strong>' . $icon . $browser . ' ('.$version.')' . '</strong></p>' . $this->recommendBrowser(false,$browser) . '</div>';
 
             } else {
 
-                return '<div class="callout warning"><p><span class="icon-warning big yellow"></span><strong>' . $icon . $browser . ' (' . $clientBrowser[1] . ') - <span class="warning">UPDATE REQUIRED</span></strong></p><p>Your web browser browser is outdated. Please update <strong>' . $browser . '</strong> to version <strong>' .$version.' or greater</strong>.</p></div>';
+                return '<div class="card warning"><p><span class="icon-warning big yellow"></span><strong>' . $icon . $browser . ' (' . $clientBrowser[1] . ') - <span class="warning">UPDATE REQUIRED</span></strong></p><p>Your web browser browser is outdated. Please update <strong>' . $browser . '</strong> to version <strong>' .$version.' or greater</strong>.</p></div>';
 
             }
 
         } else {
 
-            return '<div class="callout danger"><p><span class="icon-danger big red"></span><strong>Your web browser is not supported!</strong></p><p>Please try using any of the following web browsers:'. $this->recommendBrowser() .'</p></div>';
+            return '<div class="card danger"><p><span class="icon-danger big red"></span><strong>Your web browser is not supported!</strong></p><p>Please try using any of the following web browsers:'. $this->recommendBrowser() .'</p></div>';
 
         }
 
@@ -470,23 +483,7 @@ class Shortcode Extends Singleton implements Extension {
 
     }
 
-    /**
-     * checkJS function
-     *
-     * @access public
-     * @param none
-     * @return string
-     *
-     */
-    public function checkJS() {
 
-        $js = prep(get_option('js'));
-
-        if ($js == 0) return '';
-
-        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-js.js"></script><noscript><div class="callout danger"><p><span class="icon-danger big red"></span><span class="icon-javascript big"></span><strong>JavaScript is disabled!</strong> - Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
-
-    }
 
     /**
      * checkCookies function
@@ -502,7 +499,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($cookies == 0) return '';
 
-        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-cookies.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-cookies.js"></script><noscript><div class="card warning"><p><span class="icon-cancel big yellow"></span><strong>Cookies check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -520,7 +517,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($jre <= 0) return '';
 
-        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-java.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkJV" type="hidden" value="'.$jre.'" /><script type="text/javascript" src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://java.com/js/deployJava.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-java.js"></script><noscript><div class="card warning"><p><span class="icon-cancel big yellow"></span><span class="icon-java big"></span><strong>Java check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -538,30 +535,7 @@ class Shortcode Extends Singleton implements Extension {
 
         if ($flash <= 0) return '';
 
-        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-flash.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
-
-    }
-    
-    /**
-     * checkScreen function
-     *
-     * @access public
-     * @param none
-     * @return string
-     *
-     */
-    public function checkScreen() {
-        
-        if ( prep(get_option('disable_screen_check')) != '1' ) {
-            
-            $screenWidth = prep(get_option('screen_w'));
-            $screenHeight = prep(get_option('screen_h'));
-            
-            return '<input id="checkScreenW" type="hidden" value="'.$screenWidth.'" /><input id="checkScreenH" type="hidden" value="'.$screenHeight.'" /><input id="disableCheckScreen" type="hidden" value="0" /><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
-            
-        }
-
-        return '<input id="disableCheckScreen" type="hidden" value="1" /><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-screen.js"></script><noscript><div class="callout warning"><p><span class="icon-cancel big yellow"></span><strong>Screen resolution check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
+        return '<input id="checkFL" type="hidden" value="'.$flash.'" /><script src="http' . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script><script type="text/javascript" src="'.SYS_REQ_URL.'/public/js/check-flash.js"></script><noscript><div class="card warning"><p><span class="icon-cancel big yellow"></span><strong>Adobe Flash Player check failed!</strong> - JavaScript is required. Please <a href="http://enable-javascript.com/" target="_blank">enable</a><span class="icon-link"></span> JavaScript!</p></div></noscript>';
 
     }
 
@@ -576,6 +550,14 @@ class Shortcode Extends Singleton implements Extension {
             SYS_REQ_VERSION
         );
 		wp_enqueue_style( 'system-requirements-check' );
+        wp_register_script(
+            'system-requirements-check',
+            plugins_url( 'public/js/system-requirements-check.js', dirname( __FILE__ ) ),
+            array(),
+            SYS_REQ_VERSION,
+            array( 'strategy' => 'defer', 'in_footer' => true )
+        );
+		wp_enqueue_script( 'system-requirements-check' );
     }
 
 }
