@@ -182,17 +182,16 @@ class Settings {
 	 * @access public
 	 * @return void
 	 */
-	public function output() {
-		$this->init_settings();
-		?>
-		
-		<div class="wrap">
-			<h1>System Requirements Check</h1>
-			<div class="src-wrap">
-				<?php include_once __DIR__ . '/settings-form.php'; ?>
-			</div>
-		</div>
-		<?php
-	}
-	
+        public function output() {
+                $this->init_settings();
+                ?>
+
+                <div class="wrap">
+                        <h1><?php esc_html_e( 'System Requirements Check', 'system_requirements_check' ); ?></h1>
+                        <?php settings_errors(); ?>
+                        <?php include_once __DIR__ . '/settings-form.php'; ?>
+                </div>
+                <?php
+        }
+
 }
