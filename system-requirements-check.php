@@ -18,9 +18,6 @@ if ( ! function_exists( '\get_plugin_data' ) ) {
 define( 'SYS_REQ_VERSION', \get_plugin_data( __FILE__, false, false )['Version'] );
 define( 'SYS_REQ_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ) ) ) );
 
-// require_once __DIR__ . 'includes/class-system-requirements-check.php';
-// require_once __DIR__ . 'includes/class-shortcode.php';
-
 require_once 'includes/autoloader.php';
 
 use \eslin87\SysReq\SystemRequirementsCheck;
